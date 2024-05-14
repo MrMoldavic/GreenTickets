@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènements disponibles{% endblock %}
+
+{% block body %}
+
+    <body>
+
+    <section class="py-5">
+
+        <div class="container px-4 px-lg-5 mt-5">
+           {# {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}#}
+            <div class="container-fluid py-5">
+                <form action="{{ path("app_home") }}" class="row g-3" method="POST">
+                    <div class="col-md-2">
+                        <label for="filter" class="form-label">Filter</label>
+                        <select id="filter" name="filter">
+                            <option value="price_asc">Prix croissant</option>
+                            <option value="price_desc">Prix décroissant</option>
+                            <option value="name_asc">Alphabétique A → Z</option>
+                            <option value="name_desc">Alphabétique Z → A</option>
+                        </select>
+                    </div>
+                    <div class="col-2 d-flex">
+                        <button type="submit" class="mt-auto btn btn-dark">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="container-fluid py-5">
+                <form action="{{ path("app_home") }}" class="row g-3" method="POST">
+                    <div id="slider"></div>
+                    <input type="text" id="inputMin" step="0.5" name="inputMin" hidden>
+                    <input type="text" id="inputMax" step="0.5" name="inputMax" hidden>
+                    <div class="col-2 d-flex">
+                        <button type="submit" class="mt-auto btn btn-dark">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {%  for event in events %}
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="uploads/{{ event.image }}"/>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ event.name }}</h5>
+                                    <p class="fw-bolder">{{ event.description }}</p>
+                                    <!-- Product price-->
+                                    {#<p class="fw-bolder">{{ (event.price/100)| format_currency('EUR',locale="fr")}}</p>#}
+                                    {% if app.session.get('cart')[event.id] is defined %}
+                                        <input type="number" style="width: 20%;" name="number" min="0" value="{{ app.session.get('cart')[event.id]  }}">
+                                        <button data-product="{{event.id}}" type="submit" class="btn btn-outline-dark mt-auto add-cart-button">Mettre à jour <span class="bi-cart-fill"></span></button>
+                                    {% else %}
+                                        <input type="number" style="width: 20%;" name="number" min="0" value="0">
+                                        <button data-product="{{event.id}}" id="event-{{ event.id }}" type="submit" class="btn btn-outline-dark mt-auto add-cart-button">Ajouter au panier <span class="bi-cart-fill"></span></button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {%  endfor %}
+            </div>
+        </div>
+    </section>
+
+    </body>
+{% endblock %}
